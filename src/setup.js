@@ -52,7 +52,10 @@ export default async function setup() {
   try {
     execSync('npm install -g @allthingsclaude/bar', { stdio: 'inherit' });
   } catch {
-    console.error(`\n  ${BRAND}Warning:${RESET} Global install failed. You may need to run with sudo or fix npm permissions.`);
+    const fix = process.platform === 'win32'
+      ? 'Try again from a terminal opened with "Run as administrator", or check that npm is on your PATH.'
+      : 'You may need to run with sudo or fix npm permissions.';
+    console.error(`\n  ${BRAND}Warning:${RESET} Global install failed. ${fix}`);
   }
 
   // OAuth login (only needed for session/rate-limit data)

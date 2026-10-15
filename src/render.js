@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { join } from 'path';
+import { join, basename } from 'path';
 import { homedir } from 'os';
 import { BRAND, BRAND_DARK, BRAND_LIGHT, BRAND_LIGHTER, TRACK, DIM, RESET, intensityColor } from './colors.js';
 import { getGitInfo } from './git.js';
@@ -100,7 +100,7 @@ export function render(input, usage) {
   // ── LINE 3: Git ────────────────────────────────────────────
   const cwd = input?.workspace?.current_dir || '.';
   const projectDir = input?.workspace?.project_dir || cwd;
-  const projectName = projectDir.split('/').pop();
+  const projectName = basename(projectDir);
   const git = getGitInfo(cwd);
 
   let line3 = '';

@@ -21,7 +21,7 @@ function barTokenPath() {
 function readBarToken() {
   const data = readJson(barTokenPath());
   if (!data?.accessToken) return null;
-  return data;
+  return { ...data, source: 'bar' };
 }
 
 function readBatteryTokens() {
@@ -34,13 +34,17 @@ function readBatteryTokens() {
   }
   for (const f of files) {
     const data = readJson(join(dir, f));
-    if (data?.accessToken) return data;
+    // Access token only. OAuth refresh tokens are single-use: refreshing
+    // Battery's chain here would spend the token Battery has on disk and
+    // sign Battery out. Battery keeps its own tokens fresh.
+    if (data?.accessToken) return { accessToken: data.accessToken, source: 'battery' };
   }
   return null;
 }
 
 export async function refreshToken(tokenData) {
-  if (!tokenData?.refreshToken) return null;
+  // Only Bar's own chain is ours to rotate (see readBatteryTokens)
+  if (tokenData?.source !== 'bar' || !tokenData.refreshToken) return null;
   try {
     const body = JSON.stringify({
       grant_type: 'refresh_token',

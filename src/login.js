@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { writeFileSync, mkdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { homedir } from 'os';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { request } from './http.js';
 
 const CLIENT_ID = '9d1c250a-e61b-44d9-88ed-5944d1962f5e';
@@ -21,15 +21,20 @@ function generatePKCE() {
   return { verifier, challenge };
 }
 
+// execFile, not a shell: the OAuth URL is full of `&`, which cmd.exe treats as a
+// command separator, so `start "<url>"` would truncate it at the first param.
+function browserCommand(url) {
+  if (process.platform === 'win32') return ['rundll32', ['url.dll,FileProtocolHandler', url]];
+  if (process.platform === 'darwin') return ['open', [url]];
+  return ['xdg-open', [url]];
+}
+
 function openBrowser(url) {
+  const [cmd, args] = browserCommand(url);
   try {
-    execSync(`open "${url}"`, { stdio: 'ignore' });
+    execFileSync(cmd, args, { stdio: 'ignore' });
   } catch {
-    try {
-      execSync(`xdg-open "${url}"`, { stdio: 'ignore' });
-    } catch {
-      console.log(`Open this URL in your browser:\n${url}`);
-    }
+    console.log(`Open this URL in your browser:\n${url}`);
   }
 }
 

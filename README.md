@@ -42,7 +42,7 @@ npm i -g @allthingsclaude/bar
 claude-bar login
 ```
 
-Opens your browser to sign in with your Anthropic account (OAuth + PKCE). Tokens are stored securely in `~/.bar/tokens.json`.
+Opens your browser to sign in with your Anthropic account (OAuth + PKCE). Tokens are stored in `~/.bar/tokens.json`, readable only by your user on macOS and Linux.
 
 ### 3. Configure Claude Code
 
@@ -98,6 +98,15 @@ Bar resolves tokens in this order:
 1. `BAR_TOKEN` environment variable
 2. `CLAUDE_CODE_OAUTH_TOKEN` environment variable
 3. `~/.bar/tokens.json` (created by `claude-bar login`)
+4. `~/.battery/tokens/*.json` (if [Battery](https://github.com/allthingsclaude/battery) is signed in)
+
+Bar only refreshes its own token. A Battery token is used as-is, because refresh tokens are single-use and rotating Battery's would sign Battery out.
+
+## Windows
+
+Bar runs on Windows 10 and 11 with Node and Git on your `PATH`. Paths starting with `~` mean your user folder (`%USERPROFILE%`), so tokens live in `%USERPROFILE%\.bar\tokens.json`. Windows ignores Unix file permissions, so that file is protected only by your user folder's default access rules.
+
+If `npm install -g` fails during setup, run it from a terminal opened with "Run as administrator", or check that npm is on your `PATH`.
 
 ## License
 

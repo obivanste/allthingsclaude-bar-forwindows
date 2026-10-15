@@ -1,8 +1,8 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { readFileSync, writeFileSync, statSync } from 'fs';
 import { createHash } from 'crypto';
 import { tmpdir } from 'os';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 const CACHE_TTL = 5; // seconds
 
@@ -21,16 +21,18 @@ function readCache(path) {
   return null;
 }
 
-function run(cmd, cwd) {
+// execFile, not execSync: no shell in between, which on Windows saves a cmd.exe
+// spawn per call. Process creation is slow enough there to make every call count.
+function run(args, cwd) {
   try {
-    return execSync(cmd, { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
   } catch {
     return '';
   }
 }
 
 /**
- * Get git info for a directory. Returns { branch, staged, modified, untracked, worktree } or null.
+ * Get git info for a directory. Returns { branch, worktree } or null.
  */
 export function getGitInfo(cwd) {
   if (!cwd) return null;
@@ -39,19 +41,17 @@ export function getGitInfo(cwd) {
   const cached = readCache(cp);
   if (cached) return cached;
 
-  // Check if it's a git repo
-  if (!run('git rev-parse --git-dir', cwd)) return null;
-
-  const branch = run('git branch --show-current', cwd) || run('git rev-parse --short HEAD', cwd);
-  const staged = run('git diff --cached --numstat', cwd).split('\n').filter(Boolean).length;
-  const modified = run('git diff --numstat', cwd).split('\n').filter(Boolean).length;
-  const untracked = run('git ls-files --others --exclude-standard', cwd).split('\n').filter(Boolean).length;
-
-  const gitDir = run('git rev-parse --git-dir', cwd);
-  const gitCommon = run('git rev-parse --git-common-dir', cwd);
+  // One call answers both "is this a repo" and "is this a linked worktree"
+  const dirs = run(['rev-parse', '--git-dir', '--git-common-dir'], cwd);
+  if (!dirs) return null;
+  // From a subdirectory git reports --git-dir absolute but --git-common-dir
+  // relative (`../.git`), so compare resolved paths or every subdir reads as a worktree
+  const [gitDir, gitCommon] = dirs.split('\n').map(d => resolve(cwd, d));
   const worktree = gitDir !== gitCommon;
 
-  const info = { branch, staged, modified, untracked, worktree };
+  const branch = run(['branch', '--show-current'], cwd) || run(['rev-parse', '--short', 'HEAD'], cwd);
+
+  const info = { branch, worktree };
   try { writeFileSync(cp, JSON.stringify(info)); } catch {}
   return info;
 }
