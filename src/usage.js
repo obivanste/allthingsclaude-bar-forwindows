@@ -8,17 +8,27 @@ const USAGE_URL = 'https://api.anthropic.com/api/oauth/usage';
 const CACHE_PATH = join(tmpdir(), 'bar-usage-cache.json');
 const CACHE_TTL = 30; // seconds
 
+const DEFAULT_BACKOFF = 60; // seconds, when a 429 has no Retry-After
+
+// Cache holds the last good result (_ts) and, after a 429, when we may call again (_backoffUntil)
 function readCache() {
   try {
-    const data = JSON.parse(readFileSync(CACHE_PATH, 'utf8'));
-    if (Date.now() - data._ts < CACHE_TTL * 1000) return data;
-  } catch {}
-  return null;
+    return JSON.parse(readFileSync(CACHE_PATH, 'utf8'));
+  } catch {
+    return null;
+  }
 }
 
 function writeCache(data) {
   try {
     writeFileSync(CACHE_PATH, JSON.stringify({ ...data, _ts: Date.now() }));
+  } catch {}
+}
+
+function writeBackoff(cache, seconds) {
+  try {
+    const lastGood = cache?._ts ? cache : {};
+    writeFileSync(CACHE_PATH, JSON.stringify({ ...lastGood, _backoffUntil: Date.now() + seconds * 1000 }));
   } catch {}
 }
 
@@ -34,15 +44,20 @@ async function fetchUsage(accessToken) {
 }
 
 /**
- * Get usage data. Returns { fiveHour, sevenDay } or null.
- * Uses file cache (30s TTL), auto-refreshes token on 401.
+ * Get usage data. Returns { fiveHour, sevenDay }, { error: 'auth' } when there is
+ * no usable token, or null on any other failure.
+ * Uses file cache (30s TTL), auto-refreshes token on 401, and on 429 waits out
+ * Retry-After while serving the last good result.
  */
 export async function getUsage() {
   const cached = readCache();
-  if (cached) return cached;
+  if (cached && Date.now() - cached._ts < CACHE_TTL * 1000) return cached;
+  // Rate limited: calling again only extends the limit
+  const lastGood = cached?._ts ? cached : null;
+  if (cached?._backoffUntil > Date.now()) return lastGood;
 
   const tokenData = resolveToken();
-  if (!tokenData) return null;
+  if (!tokenData) return { error: 'auth' };
 
   let res = await fetchUsage(tokenData.accessToken).catch(() => null);
   if (!res) return null;
@@ -65,6 +80,12 @@ export async function getUsage() {
     }
   }
 
+  // Still 401: token rejected and not ours to refresh (or refresh failed)
+  if (res.status === 401) return { error: 'auth' };
+  if (res.status === 429) {
+    writeBackoff(cached, Number(res.headers?.['retry-after']) || DEFAULT_BACKOFF);
+    return lastGood;
+  }
   if (!res.ok) return null;
 
   try {

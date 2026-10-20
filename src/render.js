@@ -59,7 +59,7 @@ function fmtCountdown(resetsAt) {
 /**
  * Render 3-line statusline.
  * @param {object} input  - Claude Code statusline JSON
- * @param {object|null} usage - { fiveHour: { utilization, resetsAt }, sevenDay } or null
+ * @param {object|null} usage - { fiveHour: { utilization, resetsAt }, sevenDay }, { error: 'auth' }, or null
  */
 export function render(input, usage) {
   const config = getConfig();
@@ -94,7 +94,10 @@ export function render(input, usage) {
     const countdown = fmtCountdown(usage.fiveHour.resetsAt) || '--';
     line2 = `${BRAND}Session${RESET}${SEP}[${bar2}] ${sIntensity}${sessionPct}%${RESET}${SEP}${DIM}${countdown}${RESET}`;
   } else {
-    line2 = `${BRAND}Session${RESET}${SEP}${DIM}No active session${RESET}`;
+    const status = usage?.error === 'auth' ? 'Not signed in'
+      : usage ? 'No active session'
+      : 'Usage unavailable';
+    line2 = `${BRAND}Session${RESET}${SEP}${DIM}${status}${RESET}`;
   }
 
   // ── LINE 3: Git ────────────────────────────────────────────
