@@ -1,0 +1,139 @@
+{
+  "results": [
+    {
+      "name": "3 lines via npm .cmd shim",
+      "pass": true,
+      "detail": "Opus 5.5 │ 80k/967k [█░░░░░░░░░] 8% / Session │ [███████░░░] 69% │ 37m / ⎇ windows-support │ +12 -3"
+    },
+    {
+      "name": "context math (80k of 1M, auto-compact buffer)",
+      "pass": true,
+      "detail": "Opus 5.5 │ 80k/967k [█░░░░░░░░░] 8%"
+    },
+    {
+      "name": "session % from live API",
+      "pass": true,
+      "detail": "Session │ [███████░░░] 69% │ 37m"
+    },
+    {
+      "name": "git branch + line counts",
+      "pass": true,
+      "detail": "⎇ windows-support │ +12 -3"
+    },
+    {
+      "name": "timing cold (API call each run)",
+      "pass": true,
+      "detail": "median 149ms, max 503ms over 5 runs"
+    },
+    {
+      "name": "timing warm (30s usage cache)",
+      "pass": true,
+      "detail": "median 145ms, max 164ms over 10 runs"
+    },
+    {
+      "name": "timing warm, node direct (no .cmd shim)",
+      "pass": true,
+      "detail": "median 124ms"
+    },
+    {
+      "name": "subdirectory not misread as worktree",
+      "pass": true,
+      "detail": "⎇ main │ +12 -3"
+    },
+    {
+      "name": "linked worktree indicator",
+      "pass": true,
+      "detail": "ᚰ wt │ ⎇ feat/x │ +12 -3"
+    },
+    {
+      "name": "detached HEAD shows short hash",
+      "pass": true,
+      "detail": "⎇ 6583e7f │ +12 -3"
+    },
+    {
+      "name": "non-git folder hides git line",
+      "pass": true,
+      "detail": "2 lines"
+    },
+    {
+      "name": "path with spaces/unicode/&",
+      "pass": true,
+      "detail": "⎇ spaced │ +12 -3"
+    },
+    {
+      "name": "~/.bar/config.json hides lines",
+      "pass": true,
+      "detail": "Session │ Not signed in"
+    },
+    {
+      "name": "no credentials → \"Not signed in\", quiet",
+      "pass": true,
+      "detail": "Session │ Not signed in"
+    },
+    {
+      "name": "expired Claude Code token → \"Not signed in\", quiet",
+      "pass": true,
+      "detail": "Session │ Not signed in"
+    },
+    {
+      "name": "rejected token (401) → \"Not signed in\", quiet",
+      "pass": true,
+      "detail": "Session │ Not signed in"
+    },
+    {
+      "name": "network failure → quiet (proxy test, may not apply)",
+      "pass": true,
+      "detail": "Session │ Usage unavailable"
+    },
+    {
+      "name": "garbage stdin → quiet",
+      "pass": true,
+      "detail": "? │ 0/167k [░░░░░░░░░░] 0%"
+    },
+    {
+      "name": "empty stdin → quiet",
+      "pass": true,
+      "detail": "3 lines"
+    },
+    {
+      "name": "token resolves from Claude Code creds, no Bar login",
+      "pass": true,
+      "detail": "source=claude-code, length=108"
+    },
+    {
+      "name": "no ~/.bar/tokens.json written (Bar never stored a token)",
+      "pass": true
+    }
+  ],
+  "facts": {
+    "os": "Microsoft Windows [Version 10.0.22631.6199]",
+    "node": "v24.20.0",
+    "git": "git version 2.55.0.windows.5",
+    "claudeCode": "2.1.304 (Claude Code)",
+    "npmPrefix": "C:\\Users\\Steve\\AppData\\Roaming\\npm",
+    "tmpdir": "C:\\Users\\Steve\\AppData\\Local\\Temp",
+    "CLAUDE_CONFIG_DIR": "(unset)",
+    "credentialsTopLevelKeys": [
+      "mcpOAuth",
+      "claudeAiOauth"
+    ],
+    "claudeAiOauthShape": {
+      "accessToken": "string",
+      "refreshToken": "string",
+      "expiresAt": "number",
+      "refreshTokenExpiresAt": "number",
+      "scopes": "array",
+      "subscriptionType": "string",
+      "rateLimitTier": "string",
+      "subscriptionTypeSource": "string"
+    },
+    "tokenMinutesLeft": 172,
+    "usageApiStatus": 429,
+    "usageApiShape": {
+      "error": [
+        "type",
+        "message"
+      ]
+    }
+  }
+}
