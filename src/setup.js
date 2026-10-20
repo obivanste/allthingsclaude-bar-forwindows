@@ -17,7 +17,7 @@ function writeStatusLineConfig() {
 
   settings.statusLine = {
     type: 'command',
-    command: 'claude-bar',
+    command: 'claude-wbar',
   };
 
   mkdirSync(dirname(CLAUDE_SETTINGS_PATH), { recursive: true });
@@ -50,7 +50,7 @@ export default async function setup() {
   // Install globally
   console.log(`\n  Installing globally...`);
   try {
-    execSync('npm install -g @allthingsclaude/bar', { stdio: 'inherit' });
+    execSync('npm install -g github:obivanste/allthingsclaude-bar-forwindows#windows-support', { stdio: 'inherit' });
   } catch {
     const fix = process.platform === 'win32'
       ? 'Try again from a terminal opened with "Run as administrator", or check that npm is on your PATH.'

@@ -1,11 +1,11 @@
 {
-  "name": "@allthingsclaude/bar",
-  "version": "0.1.7",
+  "name": "allthingsclaude-bar-forwindows",
+  "version": "0.1.8",
   "description": "Battery-themed statusline for Claude Code",
   "type": "module",
   "bin": {
-    "bar": "./src/index.js",
-    "claude-bar": "./src/index.js"
+    "wbar": "./src/index.js",
+    "claude-wbar": "./src/index.js"
   },
   "files": [
     "src/"
@@ -25,6 +25,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/allthingsclaude/bar"
+    "url": "https://github.com/obivanste/allthingsclaude-bar-forwindows"
   }
 }

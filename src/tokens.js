@@ -42,6 +42,16 @@ function readBatteryTokens() {
   return null;
 }
 
+function readClaudeCodeToken() {
+  const dir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude');
+  const oauth = readJson(join(dir, '.credentials.json'))?.claudeAiOauth;
+  if (!oauth?.accessToken) return null;
+  // Read-only, same rule as Battery's tokens: never refresh Claude Code's chain.
+  // Claude Code keeps this token fresh while it is running.
+  if (oauth.expiresAt && oauth.expiresAt < Date.now()) return null;
+  return { accessToken: oauth.accessToken, source: 'claude-code' };
+}
+
 export async function refreshToken(tokenData) {
   // Only Bar's own chain is ours to rotate (see readBatteryTokens)
   if (tokenData?.source !== 'bar' || !tokenData.refreshToken) return null;
@@ -70,7 +80,7 @@ export async function refreshToken(tokenData) {
 
 /**
  * Resolve an access token. Returns { accessToken, refreshToken?, expiresIn? } or null.
- * Priority: env var → bar tokens → battery tokens → null
+ * Priority: env var → bar tokens → battery tokens → Claude Code credentials → null
  */
 export function resolveToken() {
   // 1. Env var (plain access token string)
@@ -85,5 +95,6 @@ export function resolveToken() {
   const battery = readBatteryTokens();
   if (battery) return battery;
 
-  return null;
+  // 4. Claude Code's own credentials file
+  return readClaudeCodeToken();
 }

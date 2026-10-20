@@ -1,5 +1,5 @@
-# Bar
-> by All Things Claude
+# Bar for Windows
+> Unofficial Windows port of [Bar](https://github.com/allthingsclaude/bar) by All Things Claude. All credit for the original goes to its creator. This fork adds Windows support and is not published to npm.
 
 ![Battery](assets/bar.webp)
 
@@ -14,13 +14,13 @@ Session │ [██░░░░░░░░] 19% │ 4h 31m
 ## Quick start
 
 ```sh
-npx @allthingsclaude/bar
+npx github:obivanste/allthingsclaude-bar-forwindows#windows-support
 ```
 
 The interactive setup wizard will:
 
 1. Ask which lines you want visible (context, session, git)
-2. Install `claude-bar` globally
+2. Install `claude-wbar` globally
 3. Open your browser to authenticate with your Anthropic account
 4. Configure Claude Code's `statusLine` in `~/.claude/settings.json`
 
@@ -33,13 +33,13 @@ If you prefer to set things up yourself:
 ### 1. Install
 
 ```sh
-npm i -g @allthingsclaude/bar
+npm i -g github:obivanste/allthingsclaude-bar-forwindows#windows-support
 ```
 
 ### 2. Authenticate
 
 ```sh
-claude-bar login
+claude-wbar login
 ```
 
 Opens your browser to sign in with your Anthropic account (OAuth + PKCE). Tokens are stored in `~/.bar/tokens.json`, readable only by your user on macOS and Linux.
@@ -52,7 +52,7 @@ Add to your Claude Code settings (`~/.claude/settings.json`):
 {
   "statusLine": {
     "type": "command",
-    "command": "claude-bar"
+    "command": "claude-wbar"
   }
 }
 ```
@@ -87,9 +87,9 @@ Set any line to `false` to hide it.
 
 | Command | Description |
 |---------|-------------|
-| `npx @allthingsclaude/bar` | Run interactive setup wizard |
-| `claude-bar login` | Authenticate via OAuth |
-| `claude-bar logout` | Remove stored token |
+| `npx github:obivanste/allthingsclaude-bar-forwindows#windows-support` | Run interactive setup wizard |
+| `claude-wbar login` | Authenticate via OAuth |
+| `claude-wbar logout` | Remove stored token |
 
 ## Auth options
 
@@ -97,10 +97,11 @@ Bar resolves tokens in this order:
 
 1. `BAR_TOKEN` environment variable
 2. `CLAUDE_CODE_OAUTH_TOKEN` environment variable
-3. `~/.bar/tokens.json` (created by `claude-bar login`)
+3. `~/.bar/tokens.json` (created by `claude-wbar login`)
 4. `~/.battery/tokens/*.json` (if [Battery](https://github.com/allthingsclaude/battery) is signed in)
+5. `~/.claude/.credentials.json` (Claude Code's own login, or `$CLAUDE_CONFIG_DIR`). On Windows, Claude Code keeps credentials in this plain file, so `claude-wbar login` is optional there.
 
-Bar only refreshes its own token. A Battery token is used as-is, because refresh tokens are single-use and rotating Battery's would sign Battery out.
+Bar only refreshes its own token. Battery and Claude Code tokens are used as-is and never refreshed by Bar, because refresh tokens are single-use and rotating Battery's would sign Battery out.
 
 ## Windows
 
