@@ -3,7 +3,7 @@
 You are Claude Code on a Windows 11 machine. Another Claude session on the owner's Mac did the groundwork. Your job is to test Bar on Windows and fix what breaks. Do not touch Battery yet.
 
 ## What Bar is
-`allthingsclaude/bar` (by Marko Radak, github.com/markoradak) is a Node statusline for Claude Code (`claude-wbar` command). The owner's fork is `obivanste/allthingsclaude-bar-forwindows`, branch `windows-support`. Upstream is `allthingsclaude/bar`.
+`allthingsclaude/bar` (by Marko Radak, github.com/markoradak) is a Node statusline for Claude Code (`claude-bar` command). The owner's fork is `obivanste/allthingsclaude-bar-forwindows`, branch `windows-support`. Upstream is `allthingsclaude/bar`.
 
 ## State
 - Windows support is already in the branch (commit 4e913b9): paths, git handling, and Bar no longer refreshes Battery's tokens.
@@ -23,14 +23,14 @@ You are Claude Code on a Windows 11 machine. Another Claude session on the owner
 
 ## Test plan
 1. `git clone https://github.com/obivanste/allthingsclaude-bar-forwindows` and check out `windows-support`, or `npm i -g github:obivanste/allthingsclaude-bar-forwindows#windows-support`.
-2. Run `claude-wbar` with no login. It should resolve the Claude Code token.
-3. Add `{"statusLine": {"type": "command", "command": "claude-wbar"}}` to `%USERPROFILE%\.claude\settings.json`, merging with existing content.
+2. Run `claude-bar` with no login. It should resolve the Claude Code token.
+3. Add `{"statusLine": {"type": "command", "command": "claude-bar"}}` to `%USERPROFILE%\.claude\settings.json`, merging with existing content.
 4. Restart Claude Code in a git repo. Check:
    - Do all three lines appear?
    - Does the session percentage show?
    - Is the git branch correct?
    - Does it feel laggy?
-5. If the line is blank, run `where.exe claude-wbar` to see whether Claude Code can find the command.
+5. If the line is blank, run `where.exe claude-bar` to see whether Claude Code can find the command.
 6. After 8+ hours idle, confirm Bar fails quietly instead of printing errors.
 
 ## Report back

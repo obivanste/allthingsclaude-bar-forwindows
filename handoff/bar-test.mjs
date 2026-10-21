@@ -13,7 +13,7 @@ const rec = (name, pass, detail) => { results.push({ name, pass, detail }); cons
 
 function bar(input, { env = {}, shim = false } = {}) {
   const cmd = shim ? 'cmd.exe' : process.execPath;
-  const args = shim ? ['/d', '/c', 'claude-wbar.cmd'] : [join(REPO, 'src/index.js')];
+  const args = shim ? ['/d', '/c', 'claude-bar.cmd'] : [join(REPO, 'src/index.js')];
   const t0 = performance.now();
   const r = spawnSync(cmd, args, { input: typeof input === 'string' ? input : JSON.stringify(input), encoding: 'utf8', env: { ...process.env, ...env } });
   return { out: strip(r.stdout || ''), err: r.stderr || '', code: r.status, ms: performance.now() - t0 };

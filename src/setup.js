@@ -17,7 +17,7 @@ function writeStatusLineConfig() {
 
   settings.statusLine = {
     type: 'command',
-    command: 'claude-wbar',
+    command: 'claude-bar',
   };
 
   mkdirSync(dirname(CLAUDE_SETTINGS_PATH), { recursive: true });

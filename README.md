@@ -20,7 +20,7 @@ npx github:obivanste/allthingsclaude-bar-forwindows#windows-support
 The interactive setup wizard will:
 
 1. Ask which lines you want visible (context, session, git)
-2. Install `claude-wbar` globally
+2. Install `claude-bar` globally
 3. Open your browser to authenticate with your Anthropic account
 4. Configure Claude Code's `statusLine` in `~/.claude/settings.json`
 
@@ -39,7 +39,7 @@ npm i -g github:obivanste/allthingsclaude-bar-forwindows#windows-support
 ### 2. Authenticate
 
 ```sh
-claude-wbar login
+claude-bar login
 ```
 
 Opens your browser to sign in with your Anthropic account (OAuth + PKCE). Tokens are stored in `~/.bar/tokens.json`, readable only by your user on macOS and Linux.
@@ -52,7 +52,7 @@ Add to your Claude Code settings (`~/.claude/settings.json`):
 {
   "statusLine": {
     "type": "command",
-    "command": "claude-wbar"
+    "command": "claude-bar"
   }
 }
 ```
@@ -88,8 +88,8 @@ Set any line to `false` to hide it.
 | Command | Description |
 |---------|-------------|
 | `npx github:obivanste/allthingsclaude-bar-forwindows#windows-support` | Run interactive setup wizard |
-| `claude-wbar login` | Authenticate via OAuth |
-| `claude-wbar logout` | Remove stored token |
+| `claude-bar login` | Authenticate via OAuth |
+| `claude-bar logout` | Remove stored token |
 
 ## Auth options
 
@@ -97,9 +97,9 @@ Bar resolves tokens in this order:
 
 1. `BAR_TOKEN` environment variable
 2. `CLAUDE_CODE_OAUTH_TOKEN` environment variable
-3. `~/.bar/tokens.json` (created by `claude-wbar login`)
+3. `~/.bar/tokens.json` (created by `claude-bar login`)
 4. `~/.battery/tokens/*.json` (if [Battery](https://github.com/allthingsclaude/battery) is signed in)
-5. `~/.claude/.credentials.json` (Claude Code's own login, or `$CLAUDE_CONFIG_DIR`). On Windows, Claude Code keeps credentials in this plain file, so `claude-wbar login` is optional there.
+5. `~/.claude/.credentials.json` (Claude Code's own login, or `$CLAUDE_CONFIG_DIR`). On Windows, Claude Code keeps credentials in this plain file, so `claude-bar login` is optional there.
 
 Bar only refreshes its own token. Battery and Claude Code tokens are used as-is and never refreshed by Bar, because refresh tokens are single-use and rotating Battery's would sign Battery out.
 
