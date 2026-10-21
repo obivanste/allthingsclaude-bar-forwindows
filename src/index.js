@@ -12,7 +12,7 @@ if (args.includes('login')) {
 } else if (args.includes('logout')) {
   logout();
 } else if (process.stdin.isTTY) {
-  // Interactive terminal (e.g. npx github:obivanste/allthingsclaude-bar-forwindows#windows-support or claude-bar) — run setup wizard
+  // Interactive terminal (e.g. npx github:obivanste/allthingsclaude-bar-forwindows or claude-bar) — run setup wizard
   await setup();
 } else {
   // Piped input from Claude Code — read stdin JSON, fetch usage, render

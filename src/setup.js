@@ -4,6 +4,7 @@ import { homedir } from 'os';
 import { execSync } from 'child_process';
 import { saveConfig } from './config.js';
 import { login } from './login.js';
+import { resolveToken } from './tokens.js';
 import { BRAND, DIM, RESET } from './colors.js';
 import { multiSelect } from './prompts.js';
 
@@ -50,7 +51,7 @@ export default async function setup() {
   // Install globally
   console.log(`\n  Installing globally...`);
   try {
-    execSync('npm install -g github:obivanste/allthingsclaude-bar-forwindows#windows-support', { stdio: 'inherit' });
+    execSync('npm install -g github:obivanste/allthingsclaude-bar-forwindows', { stdio: 'inherit' });
   } catch {
     const fix = process.platform === 'win32'
       ? 'Try again from a terminal opened with "Run as administrator", or check that npm is on your PATH.'
@@ -58,10 +59,15 @@ export default async function setup() {
     console.error(`\n  ${BRAND}Warning:${RESET} Global install failed. ${fix}`);
   }
 
-  // OAuth login (only needed for session/rate-limit data)
+  // Session/rate-limit data needs a token. Claude Code's own login is picked up
+  // automatically, so only open the browser when nothing resolves.
   if (config.lines.session) {
-    console.log(`\n  ${BRAND}Authenticating with Claude...${RESET}\n`);
-    await login();
+    if (resolveToken()) {
+      console.log(`\n  ${DIM}Using your existing Claude login, no sign-in needed.${RESET}`);
+    } else {
+      console.log(`\n  ${BRAND}Authenticating with Claude...${RESET}\n`);
+      await login();
+    }
   }
 
   // Write statusLine config to ~/.claude/settings.json

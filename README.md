@@ -14,7 +14,7 @@ Session │ [██░░░░░░░░] 19% │ 4h 31m
 ## Quick start
 
 ```sh
-npx github:obivanste/allthingsclaude-bar-forwindows#windows-support
+npx github:obivanste/allthingsclaude-bar-forwindows
 ```
 
 The interactive setup wizard will:
@@ -33,7 +33,7 @@ If you prefer to set things up yourself:
 ### 1. Install
 
 ```sh
-npm i -g github:obivanste/allthingsclaude-bar-forwindows#windows-support
+npm i -g github:obivanste/allthingsclaude-bar-forwindows
 ```
 
 ### 2. Authenticate
@@ -87,7 +87,7 @@ Set any line to `false` to hide it.
 
 | Command | Description |
 |---------|-------------|
-| `npx github:obivanste/allthingsclaude-bar-forwindows#windows-support` | Run interactive setup wizard |
+| `npx github:obivanste/allthingsclaude-bar-forwindows` | Run interactive setup wizard |
 | `claude-bar login` | Authenticate via OAuth |
 | `claude-bar logout` | Remove stored token |
 
